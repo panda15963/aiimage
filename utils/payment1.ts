@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { BrowserProvider, Contract, formatUnits } from "ethers";
 
 // 스마트 컨트랙트 주소 및 ABI
 const contractAddress = "0x659cd463202c9b030172765758426560234299Ef"; // 배포한 컨트랙트 주소 입력
@@ -508,78 +508,78 @@ const abi = [
 
 // MetaMask 연결
 export const connectWallet = async (): Promise<string | null> => {
-  if (typeof window.ethereum !== "undefined") {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const accounts = await provider.send("eth_requestAccounts", []);
-    return accounts[0]; // 연결된 첫 번째 계정 반환
-  }
-  alert("MetaMask가 설치되어 있지 않습니다.");
-  return null;
+	if (typeof window.ethereum !== "undefined") {
+		const provider = new BrowserProvider(window.ethereum);
+		const accounts = await provider.send("eth_requestAccounts", []);
+		return accounts[0]; // 연결된 첫 번째 계정 반환
+	}
+	alert("MetaMask가 설치되어 있지 않습니다.");
+	return null;
 };
 
 // 결제 함수
 export const payForEditing = async (): Promise<boolean> => {
-  if (typeof window.ethereum !== "undefined") {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
-    const contract = new ethers.Contract(contractAddress, abi, signer);
+	if (typeof window.ethereum !== "undefined") {
+		const provider = new BrowserProvider(window.ethereum);
+		const signer = await provider.getSigner();
+		const contract = new Contract(contractAddress, abi, signer);
 
-    try {
-      const tx = await contract.payForEditing(); // payForEditing 함수 호출
-      await tx.wait(); // 트랜잭션 완료 대기
-      console.log("결제가 성공적으로 완료되었습니다!");
-      return true;
-    } catch (error) {
-      console.error("결제 실패:", error);
-      return false;
-    }
-  }
-  alert("MetaMask가 설치되어 있지 않습니다.");
-  return false;
+		try {
+			const tx = await contract.payForEditing(); // payForEditing 함수 호출
+			await tx.wait(); // 트랜잭션 완료 대기
+			console.log("결제가 성공적으로 완료되었습니다!");
+			return true;
+		} catch (error) {
+			console.error("결제 실패:", error);
+			return false;
+		}
+	}
+	alert("MetaMask가 설치되어 있지 않습니다.");
+	return false;
 };
 
 // MODIM 잔액 조회 함수
 export const getModimBalance = async (userAddress: string): Promise<number> => {
 	if (typeof window.ethereum === "undefined") {
-	  throw new Error("MetaMask is not installed");
+		throw new Error("MetaMask is not installed");
 	}
-  
+
 	try {
-	  const provider = new ethers.providers.Web3Provider(window.ethereum);
-	  const signer = provider.getSigner();
-	  const contract = new ethers.Contract(contractAddress, abi, signer);
-  
-	  // 사용자 잔액 및 토큰 소수점 자릿수 가져오기
-	  const balance = await contract.balanceOf(userAddress);
-	  const decimals = await contract.decimals();
-  
-	  // 잔액을 사람이 읽을 수 있는 형태로 변환
-	  return parseFloat(ethers.utils.formatUnits(balance, decimals));
+		const provider = new BrowserProvider(window.ethereum);
+		const signer = await provider.getSigner();
+		const contract = new Contract(contractAddress, abi, signer);
+
+		// 사용자 잔액 및 토큰 소수점 자릿수 가져오기
+		const balance = await contract.balanceOf(userAddress);
+		const decimals = await contract.decimals();
+
+		// 잔액을 사람이 읽을 수 있는 형태로 변환
+		return parseFloat(formatUnits(balance, decimals));
 	} catch (error) {
-	  console.error("Error fetching MODIM balance:", error);
-	  return 0; // 오류 발생 시 0 반환
+		console.error("Error fetching MODIM balance:", error);
+		return 0; // 오류 발생 시 0 반환
 	}
-  };
+};
 
 // MODIM 수수료 조회 함수
 export const getEditFee = async (): Promise<number> => {
 	if (typeof window.ethereum === "undefined") {
-	  throw new Error("MetaMask is not installed");
+		throw new Error("MetaMask is not installed");
 	}
-  
+
 	try {
-	  const provider = new ethers.providers.Web3Provider(window.ethereum);
-	  const signer = provider.getSigner();
-	  const contract = new ethers.Contract(contractAddress, abi, signer);
-  
-	  // `editFee` 값 가져오기
-	  const fee = await contract.editFee();
-	  const decimals = await contract.decimals();
-  
-	  // 수수료 값을 사람이 읽을 수 있는 형태로 변환
-	  return parseFloat(ethers.utils.formatUnits(fee, decimals));
+		const provider = new BrowserProvider(window.ethereum);
+		const signer = await provider.getSigner();
+		const contract = new Contract(contractAddress, abi, signer);
+
+		// `editFee` 값 가져오기
+		const fee = await contract.editFee();
+		const decimals = await contract.decimals();
+
+		// 수수료 값을 사람이 읽을 수 있는 형태로 변환
+		return parseFloat(formatUnits(fee, decimals));
 	} catch (error) {
-	  console.error("Error fetching edit fee:", error);
-	  return 0; // 오류 발생 시 0 반환
+		console.error("Error fetching edit fee:", error);
+		return 0; // 오류 발생 시 0 반환
 	}
-  };  
+};  
