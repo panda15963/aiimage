@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ethersproject/providers": "^5.8.0",
     "@nextui-org/react": "^2.6.11",
     "ethers": "^6.14.1",
     "next": "15.3.2",

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { QuoationService } from "node-upbit";
 import {
   ICandleDayReturnProps,
@@ -9,10 +9,9 @@ import {
 import error from "next/error";
 
 interface IData {
-  [x: string]: any;
   minutesDataforDay: ICandleDayReturnProps[];
-  minutesDataforWeek: ICandleWeekReturnProps[]; // Update the type to ICandleWeekReturnProps[]
-  dayData: ICandlesMonthReturnProps[]; // Update the type to ICandleMonthReturnProps[]
+  minutesDataforWeek: ICandleWeekReturnProps[];
+  dayData: ICandlesMonthReturnProps[];
   weekData: ICandleWeekReturnProps[];
   ticker: ITickerProps;
 }
@@ -57,9 +56,10 @@ export const useFetchData = ({ marketCoin }: IUseFetchDataProps) => {
     },
   });
   const [loading, setLoading] = useState(true);
-  const quoationService = new QuoationService();
 
-  const fetchData = async () => {
+
+  const fetchData = useCallback(async () => {
+    const quoationService = new QuoationService();
     try {
       const dayCandles = await quoationService.getDayCandles({
         marketCoin,
@@ -94,11 +94,11 @@ export const useFetchData = ({ marketCoin }: IUseFetchDataProps) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [marketCoin]);
 
   useEffect(() => {
     fetchData();
-  }, [marketCoin]);
+  }, [fetchData]);
 
   return { data, loading, error };
 };

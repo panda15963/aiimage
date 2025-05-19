@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import Navbar from '../navbar';
 import Footer from '../Footer';
 import { connectWallet, getModimBalance } from "@/utils/payment1"; // 외부 모듈에서 가져옴
@@ -22,19 +22,19 @@ export default function TransactionAccountPage() {
   };
 
   // 잔액 가져오기
-  const fetchBalance = async () => {
+  const fetchBalance = useCallback(async () => {
     if (!userAddress) {
       console.error("Please connect your wallet first!");
       return;
     }
 
     try {
-      const balance = await getModimBalance(userAddress); // 외부 함수 호출
+      const balance = await getModimBalance(userAddress);
       setBalance(balance);
     } catch (error) {
       console.error("Error fetching balance:", error);
     }
-  };
+  }, [userAddress]);
 
   // 지갑 연결
   const connect = async () => {
@@ -48,11 +48,11 @@ export default function TransactionAccountPage() {
   }, []);
 
   // userAddress가 변경될 때 잔액 가져오기
-  useEffect(() => {
-    if (userAddress) {
-      fetchBalance();
-    }
-  }, [userAddress]);
+useEffect(() => {
+  if (userAddress) {
+    fetchBalance();
+  }
+}, [userAddress, fetchBalance]);
 
   return (
     <>

@@ -1,4 +1,5 @@
 import { KeyboardEvent, ChangeEvent, FC, useState } from 'react';
+import Image from 'next/image';
 import Navbar from '../navbar';
 import Footer from '../Footer';
 import { payForEditing, connectWallet } from "@/utils/payment1";
@@ -91,11 +92,11 @@ const SketchImages: FC = () => {
           loading: false,
         }));
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       setState(prevState => ({
         ...prevState,
         loading: false,
-        errorMessage: err.message,
+        errorMessage: err instanceof Error ? err.message : 'An unknown error occurred',
       }));
     }
   };
@@ -158,9 +159,11 @@ const SketchImages: FC = () => {
             {state.sketchImage && (
               <div className="mt-4">
                 <p className="text-xs text-gray-500">Preview:</p>
-                <img
+                <Image
                   src={URL.createObjectURL(state.sketchImage)}
                   alt="Sketch Preview"
+                  width={400}
+                  height={240}
                   className="w-full max-h-60 object-contain border border-gray-300 rounded-md"
                 />
               </div>
@@ -177,6 +180,7 @@ const SketchImages: FC = () => {
           {state.errorMessage && <p className="mt-4 text-red-500">Error: {state.errorMessage}</p>}
           {state.image && (
             <div className="mt-6 text-center">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={state.image} alt="Generated" className="mx-auto rounded-md shadow-md" />
               <a href={state.image} download={`generated_image.${state.outputFormat}`}>
                 <button className="mt-4 py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">

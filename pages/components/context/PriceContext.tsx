@@ -2,12 +2,12 @@
 import React, { createContext, useContext, useState, FC, ReactNode } from 'react';
 
 interface PriceContextPropsInterface {
-    BitcoinCashPrice: Number | null;
-    EthereumPrice: Number | null;
-    BitcoinPrice: Number | null;
-    setBitcoinCash: (price: Number) => void;
-    setEthereum: (price: Number) => void;
-    setBitcoin: (price: Number) => void;
+    BitcoinCashPrice: number | null;
+    EthereumPrice: number | null;
+    BitcoinPrice: number | null;
+    setBitcoinCash: (price: number) => void;
+    setEthereum: (price: number) => void;
+    setBitcoin: (price: number) => void;
 }
 
 // Create a context called UserContext with UserContextProps as its type
@@ -27,14 +27,14 @@ export const usePrice = () => useContext(PriceContext);
 // This component uses the useState hook to manage the user state
 // and provides the user, login, and logout functions as values for the UserContext
 export const PriceProvider: FC<{ children: ReactNode }> = ({ children }) => {
-    const [BitcoinCashPrice, setBitcoinCashPrice] = useState<Number | null>(null);
-    const [EthereumPrice, setEthereumPrice] = useState<Number | null>(null);
-    const [BitcoinPrice, setBitcoinPrice] = useState<Number | null>(null);
+    const [BitcoinCashPrice, setBitcoinCashPrice] = useState<number | null>(null);
+    const [EthereumPrice, setEthereumPrice] = useState<number | null>(null);
+    const [BitcoinPrice, setBitcoinPrice] = useState<number | null>(null);
     return (
         <PriceContext.Provider value={{ BitcoinCashPrice, EthereumPrice, BitcoinPrice, setBitcoinCash: setBitcoinCashPrice, setEthereum: setEthereumPrice, setBitcoin: setBitcoinPrice }}>
             {children}
         </PriceContext.Provider>
-    );        
+    );
 };
 
 export default PriceProvider;

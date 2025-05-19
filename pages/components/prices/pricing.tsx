@@ -89,7 +89,7 @@ const CheckIcon = ({ className, size = "w-6 h-6" }: { className?: string; size?:
 };
 
 export default function PricingPage() {
-  const [frequency, setFrequency] = useState(frequencies[0]);
+  const [frequency] = useState(frequencies[0]);
   const [tiers, setTiers] = useState<PricingTier[]>(initialTiers);
 
   // 수수료 조회 및 업데이트

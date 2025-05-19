@@ -86,11 +86,11 @@ const RemoveBackground: FC = () => {
                     loading: false,
                 });
             }
-        } catch (err: any) {
+        } catch (err: unknown) {
             setState({
                 ...state,
                 loading: false,
-                errorMessage: err.message,
+                errorMessage: err instanceof Error ? err.message : "Unknown error",
             });
         }
     };
@@ -148,7 +148,9 @@ const RemoveBackground: FC = () => {
                         {state.previewUrl && (
                             <div className="mt-4">
                                 <p className="text-sm font-medium text-gray-700">Preview:</p>
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img src={state.previewUrl} alt="Preview" className="rounded-md shadow-md" />
+
                             </div>
                         )}
                     </div>
@@ -162,7 +164,9 @@ const RemoveBackground: FC = () => {
                     {state.errorMessage && <p className="mt-4 text-red-500">Error: {state.errorMessage}</p>}
                     {state.image && (
                         <div className="mt-6 text-center">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img src={state.image} alt="Generated" className="mx-auto rounded-md shadow-md" />
+
                             <a href={state.image} download={`generated_image.${state.outputFormat}`}>
                                 <button className="mt-4 py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
                                     Download Image
