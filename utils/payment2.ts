@@ -1,5 +1,4 @@
-import { ethers } from "ethers";
-
+import { BrowserProvider, Contract } from "ethers";
 // 스마트 컨트랙트 주소 및 ABI
 const contractAddress = "0xf03d26335917D7077056Fade51DAd77790f7Abc6"; // 배포한 컨트랙트 주소 입력
 const abi = [
@@ -509,7 +508,7 @@ const abi = [
 // MetaMask 연결
 export const connectWallet = async (): Promise<string | null> => {
   if (typeof window.ethereum !== "undefined") {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const provider = new BrowserProvider(window.ethereum);
     const accounts = await provider.send("eth_requestAccounts", []);
     return accounts[0]; // 연결된 첫 번째 계정 반환
   }
@@ -520,9 +519,9 @@ export const connectWallet = async (): Promise<string | null> => {
 // 결제 함수
 export const payForEditing = async (): Promise<boolean> => {
   if (typeof window.ethereum !== "undefined") {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
-    const contract = new ethers.Contract(contractAddress, abi, signer);
+	const provider = new BrowserProvider(window.ethereum);
+	const signer = await provider.getSigner();
+	const contract = new Contract(contractAddress, abi, signer);
 
     try {
       const tx = await contract.payForEditing(); // payForEditing 함수 호출
