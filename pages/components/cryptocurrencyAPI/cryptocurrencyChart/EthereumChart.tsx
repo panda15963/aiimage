@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Card, CardBody } from "reactstrap";
-import { useFetchData } from "../useFetchData";
+import { useFetchData } from "../../../../useFetchData";
 import { Spinner } from '@nextui-org/react';
 import { usePrice } from "../../context/PriceContext";
 
